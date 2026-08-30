@@ -53,6 +53,7 @@ function Home() {
   })
 
   const [theme, setTheme] = useState("corporate")
+  const [hoveredPoint, setHoveredPoint] = useState<number | null>(null)
   return (
     <div data-theme={theme} className="min-h-screen bg-base-200">
       {/* navbar */}
@@ -135,15 +136,26 @@ function Home() {
           <div className="card-body">
             <h2 className="card-title">2 — Meter Balance (day-by-day, fixed on 1st recharge/month)</h2>
             <div className="overflow-x-auto">
-              <svg viewBox={`0 0 ${chartW} ${chartH}`} className="w-full h-[240px] bg-base-200 rounded-box">
-                {/* grid */}
-                <line x1={pad} y1={chartH - pad} x2={chartW - pad} y2={chartH - pad} stroke="#ddd" />
-                <line x1={pad} y1={pad} x2={pad} y2={chartH - pad} stroke="#ddd" />
-                <text x={pad} y={pad - 6} fontSize="10">৳{maxB.toFixed(0)}</text>
-                <text x={pad} y={chartH - pad + 12} fontSize="10">৳{minB.toFixed(0)}</text>
-                <path d={pathD} fill="none" stroke="oklch(0.6 0.15 240)" strokeWidth="2" />
-                {ledgers.map((l, i) => l.recharge > 0 ? <g key={l.date}><circle cx={xScale(i)} cy={yScale(l.balanceAfter)} r="4" fill="oklch(0.7 0.18 50)" stroke="white" strokeWidth="1.5" /><title>{`${l.date} +৳${l.recharge}`}</title></g> : null)}
-              </svg>
+               <svg viewBox={`0 0 ${chartW} ${chartH}`} className="w-full h-[240px] bg-base-200 rounded-box text-base-content" role="img" aria-label="Day-by-day meter balance chart">
+                 {/* grid */}
+                 <line x1={pad} y1={chartH - pad} x2={chartW - pad} y2={chartH - pad} stroke="currentColor" strokeOpacity=".25" />
+                 <line x1={pad} y1={pad} x2={pad} y2={chartH - pad} stroke="currentColor" strokeOpacity=".25" />
+                 <text x={pad} y={pad - 6} fontSize="10" fill="currentColor">৳{maxB.toFixed(0)}</text>
+                 <text x={pad} y={chartH - pad + 12} fontSize="10" fill="currentColor">৳{minB.toFixed(0)}</text>
+                 <path d={pathD} fill="none" stroke="oklch(0.6 0.15 240)" strokeWidth="2" />
+                 {ledgers.map((l, i) => <circle key={l.date} cx={xScale(i)} cy={yScale(l.balanceAfter)} r={l.recharge > 0 ? 4 : 2.5} fill={l.recharge > 0 ? 'oklch(0.7 0.18 50)' : 'oklch(0.6 0.15 240)'} stroke={l.recharge > 0 ? 'currentColor' : 'none'} strokeWidth="1.5" onMouseEnter={() => setHoveredPoint(i)} onMouseLeave={() => setHoveredPoint(null)} className="cursor-crosshair" />)}
+                 {hoveredPoint !== null && (() => {
+                   const point = ledgers[hoveredPoint]
+                   const tooltipX = Math.min(Math.max(xScale(hoveredPoint) - 75, pad), chartW - pad - 150)
+                   const tooltipY = Math.max(yScale(point.balanceAfter) - 42, 4)
+                   return <g pointerEvents="none">
+                     <line x1={xScale(hoveredPoint)} y1={pad} x2={xScale(hoveredPoint)} y2={chartH - pad} stroke="currentColor" strokeDasharray="3 3" strokeOpacity=".35" />
+                     <rect x={tooltipX} y={tooltipY} width="150" height="36" rx="4" fill="oklch(var(--b1))" stroke="currentColor" strokeOpacity=".35" />
+                     <text x={tooltipX + 7} y={tooltipY + 14} fontSize="10" fill="currentColor">{point.date}  ৳{point.balanceAfter.toFixed(2)}</text>
+                     <text x={tooltipX + 7} y={tooltipY + 28} fontSize="10" fill="currentColor">{point.recharge > 0 ? `Recharge +৳${point.recharge}` : `${point.units} units`}</text>
+                   </g>
+                 })()}
+               </svg>
             </div>
             <div className="flex gap-2 flex-wrap text-xs"><span className="badge badge-info badge-outline">— balance line</span><span className="badge badge-warning">● recharge</span><span>Demand+Rent charged on first recharge each month, VAT 5% on energy+fixed, slab by monthly cum.</span></div>
             <div className="overflow-x-auto max-h-64 border rounded-box mt-2">

@@ -63,7 +63,7 @@
   ],
   "ai_tools_used": [
     {
-      "tool": "Antigravity",
+      "tool": "Antigravity CLI, Opencode",
       "used_for": "Helped with implementing the prepaid meter recharge calculation,daily balance tracking, recharge logic and debugging",
       "how_output_was_verified": "Reviewed the implementation against AGENTS.md, ran the calculation engine across all public cases, and verified bun run build succeeds."
     }
