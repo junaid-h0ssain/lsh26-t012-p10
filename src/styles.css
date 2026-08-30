@@ -1,5 +1,8 @@
 
 @import "tailwindcss";
+@plugin "daisyui" {
+  themes: light, dark, corporate, cupcake, emerald, synthwave --default;
+}
 
 * {
   box-sizing: border-box;
