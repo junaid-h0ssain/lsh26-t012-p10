@@ -60,7 +60,7 @@
   "ai_tools_used": [
     {
       "tool": "Antigravity",
-      "used_for": "What the tool helped with",
+      "used_for": "Helped with implementing the prepaid meter recharge calculation,daily balance tracking, recharge logic and debugging",
       "how_output_was_verified": "How the team checked the result"
     }
   ],
