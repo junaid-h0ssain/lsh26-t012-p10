@@ -19,8 +19,14 @@ No external fonts, icon packages, image assets, or paid services are used.
 
 ## AI tools
 
-AI tools are listed in `evaluation-manifest.json`, including their use and verification.
+List each AI tool in `evaluation-manifest.json`, what it was used for and how the output was verified. Write `None` if no AI tool was used.
+
+| Tool | Used for | How output was verified |
+|---|---|---|
+| Antigravity CLI / Opencode (Muse Spark) | Implemented prepaid meter calculation, daily balance tracking, recharge logic and debugging | Reviewed against AGENTS.md, ran engine across all public cases, verified `bun run build` succeeds |
+
+See `evaluation-manifest.json` for the structured AI disclosure.
 
 ## Original-work statement
 
-Everything not declared in this file or `EVENT.md` was created by the registered team during the event window. The LofiStack submission kit was used as the supplied event template and fixture source.
+Everything not declared in this file or `EVENT.md` was created by the registered team during the event window. The LofiStack submission kit (`LofiStack-Hackathon-2026-Submission-Kit-v2.2/`) was used as the supplied event template and fixture source.

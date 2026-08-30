@@ -7,12 +7,28 @@ import { slabs, DEMAND_CHARGE, METER_RENT, VAT_RATE } from '../lib/tariff'
 export const Route = createFileRoute('/')({ component: Home })
 
 function Home() {
-  const cases = (casesData as any).cases as any[]
+  const [cases, setCases] = useState((casesData as any).cases as any[])
   const [caseIdx, setCaseIdx] = useState(0)
   const [targetDate, setTargetDate] = useState(cases[0].target_date)
   const curCase = cases[caseIdx]
   // sync target when case changes
   const handleCaseChange = (i: number) => { setCaseIdx(i); setTargetDate(cases[i].target_date) }
+  const handleDataUpload = (file: File | undefined) => {
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(String(reader.result))
+        if (parsed.problem_id !== 'P10' || !Array.isArray(parsed.cases) || parsed.cases.length === 0) throw new Error('Expected a P10 fixture with at least one case.')
+        setCases(parsed.cases)
+        setCaseIdx(0)
+        setTargetDate(parsed.cases[0].target_date)
+      } catch (error) {
+        window.alert(error instanceof Error ? error.message : 'Could not read this fixture.')
+      }
+    }
+    reader.readAsText(file)
+  }
 
   const { ledgers } = useMemo(() => rebuildEngine(curCase), [curCase])
   const runout = useMemo(() => pred(curCase, ledgers), [curCase, ledgers])
@@ -92,6 +108,15 @@ function Home() {
             <span className="badge badge-sm badge-neutral">Demand {DEMAND_CHARGE} + Rent {METER_RENT} on 1st recharge/month</span>
             <span className="badge badge-sm badge-neutral">VAT {(VAT_RATE * 100).toFixed(0)}%</span>
           </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3 text-sm">
+          <label className="btn btn-sm btn-outline">
+            Load P10 JSON fixture
+            <input type="file" accept="application/json,.json" className="hidden" onChange={e => handleDataUpload(e.target.files?.[0])} />
+          </label>
+          <button className="btn btn-sm btn-ghost" onClick={() => { setCases((casesData as any).cases); setCaseIdx(0); setTargetDate((casesData as any).cases[0].target_date) }}>Reset to published fixture</button>
+          <span className="text-xs opacity-70">Judges can upload an unpublished fixture with the same P10 schema.</span>
         </div>
 
         {/* 1. Household */}

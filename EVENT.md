@@ -8,7 +8,7 @@
 
 ## Material present before 6:00 PM
 
-No pre-event materials were used.
+List every scaffold, template, configuration, asset or file already present before the event started. Write `None` if the repository was empty.
 
 | Material | Source or original location | What was already present |
 |---|---|---|

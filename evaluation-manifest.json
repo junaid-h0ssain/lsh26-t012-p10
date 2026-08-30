@@ -9,8 +9,8 @@
   "pre_event_materials": [],
   "sample_data": {
     "loads_published_fixture": true,
-    "method": "repository fixture loaded by the application",
-    "reset_instructions": "Restore P10_prepaid_meter_public.json from the repository and reload the application."
+    "method": "repository fixture loaded by the application or JSON fixture upload",
+    "reset_instructions": "Click Reset to published fixture, or restore P10_prepaid_meter_public.json and reload the application."
   },
   "problem_solving_method": "A deterministic TypeScript calculation engine rebuilds the daily meter ledger, projects run-out and target-date recharge needs, and simulates both recharge habits. A React dashboard presents the supplied fixture, calculations, and evidence in one page.",
   "requirements": {
@@ -35,19 +35,19 @@
     {
       "registered_name": "Junaid Hossain",
       "github_username": "junaid-h0ssain",
-      "major_contribution": "To be completed by the team.",
+      "major_contribution": "Calculation engine, tariff module, and recharge logic",
       "evidence_paths_or_commits": [
-        "README.md",
-        "src/lib/engine.ts"
+        "src/lib/engine.ts",
+        "src/lib/tariff.ts"
       ]
     },
     {
       "registered_name": "Punam Chakraborty",
       "github_username": "punammomi",
-      "major_contribution": "To be completed by the team.",
+      "major_contribution": "Dashboard UI, balance chart, and fixture handling",
       "evidence_paths_or_commits": [
-        "README.md",
-        "src/routes/index.tsx"
+        "src/routes/index.tsx",
+        "P10_prepaid_meter_public.json"
       ]
     }
   ],
@@ -57,15 +57,20 @@
     "Keep the public JSON fixture as the reproducible source of truth for judges."
   ],
   "known_limitations": [
-    "The app uses a static fixture and does not provide data entry or persistence.",
+      "Uploaded fixtures are not persisted after a page reload.",
     "Target-date estimates conservatively reserve fixed charges for future months.",
     "bun run build succeeds; bun run check currently reports existing Biome diagnostics."
   ],
   "ai_tools_used": [
     {
-      "tool": "Antigravity CLI, Opencode",
-      "used_for": "Helped with implementing the prepaid meter recharge calculation,daily balance tracking, recharge logic and debugging",
-      "how_output_was_verified": "Reviewed the implementation against AGENTS.md, ran the calculation engine across all public cases, and verified bun run build succeeds."
+      "tool": "Opencode (Muse Spark)",
+      "used_for": "Helped implement prepaid meter calculation, daily balance tracking, recharge logic and debugging",
+      "how_output_was_verified": "Reviewed implementation against AGENTS.md, ran calculation engine across all public cases, and verified bun run build succeeds"
+    },
+    {
+      "tool": "Antigravity CLI",
+      "used_for": "Assisted with scaffolding and code generation for the dashboard",
+      "how_output_was_verified": "Manual review of generated code and build verification"
     }
   ],
   "licenses_file": "LICENSES.md",
