@@ -71,12 +71,12 @@ function Home() {
   const [theme, setTheme] = useState("corporate")
   const [hoveredPoint, setHoveredPoint] = useState<number | null>(null)
   return (
-    <div data-theme={theme} className="min-h-screen bg-base-200">
+    <div data-theme={theme} className="min-h-screen bg-base-200 text-base-content">
       {/* navbar */}
       <div className="navbar bg-base-100 shadow-sm sticky top-0 z-10">
-        <div className="flex-1 px-2">
-          <span className="text-xl font-bold">⚡ Prepaid Meter Advisor</span>
-          <span className="badge badge-primary ml-3">P10</span>
+        <div className="flex-1 px-2 flex items-center gap-3">
+          <span className="text-2xl font-bold">⚡ Prepaid Meter Advisor</span>
+          <span className="badge badge-primary text-base px-3 py-2 font-semibold">P10</span>
         </div>
         <div className="flex gap-2 items-center">
           <label className="swap swap-rotate btn btn-ghost btn-circle btn-sm">
@@ -101,12 +101,12 @@ function Home() {
 
       <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
         {/* tariff banner */}
-        <div className="alert bg-base-100 border">
-          <div className="flex flex-wrap gap-2 text-xs">
-            <span className="font-bold">Tariff (BDT/kWh):</span>
-            {slabs.map((s, i) => <span key={i} className="badge badge-sm badge-outline">{s.upTo === Infinity ? '601+' : `${i === 0 ? '0' : (slabs[i - 1].upTo + 1)}-${s.upTo}`} : {s.rate}</span>)}
-            <span className="badge badge-sm badge-neutral">Demand {DEMAND_CHARGE} + Rent {METER_RENT} on 1st recharge/month</span>
-            <span className="badge badge-sm badge-neutral">VAT {(VAT_RATE * 100).toFixed(0)}%</span>
+        <div className="alert bg-base-100 border text-lg">
+          <div className="flex flex-wrap gap-2 text-base items-center">
+            <span className="font-bold text-lg">Tariff (BDT/kWh):</span>
+            {slabs.map((s, i) => <span key={i} className="badge badge-lg badge-outline text-base">{s.upTo === Infinity ? '601+' : `${i === 0 ? '0' : (slabs[i - 1].upTo + 1)}-${s.upTo}`} : {s.rate}</span>)}
+            <span className="badge badge-lg badge-neutral text-base">Demand {DEMAND_CHARGE} + Rent {METER_RENT} on 1st recharge/month</span>
+            <span className="badge badge-lg badge-neutral text-base">VAT {(VAT_RATE * 100).toFixed(0)}%</span>
           </div>
         </div>
 
@@ -122,8 +122,8 @@ function Home() {
         {/* 1. Household */}
         <div className="card bg-base-100 shadow">
           <div className="card-body">
-            <h2 className="card-title">1 — Household & Daily Readings <span className="badge badge-primary">{curCase.days.length} days</span></h2>
-            <p className="text-sm opacity-70">Six+ months from {curCase.days[0].date} to {curCase.today} — light month, heavy summer month, and last-week large recharge highlighted.</p>
+            <h2 className="card-title text-2xl">1 — Household & Daily Readings <span className="badge badge-primary text-sm">{curCase.days.length} days</span></h2>
+            <p className="text-base opacity-80">Six+ months from {curCase.days[0].date} to {curCase.today} — light month, heavy summer month, and last-week large recharge highlighted.</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
               <div className="stat bg-base-200 rounded-box p-3">
                 <div className="stat-title text-xs">Light month</div>
@@ -159,7 +159,7 @@ function Home() {
         {/* 2. Balance chart */}
         <div className="card bg-base-100 shadow">
           <div className="card-body">
-            <h2 className="card-title">2 — Meter Balance (day-by-day, fixed on 1st recharge/month)</h2>
+            <h2 className="card-title text-2xl">2 — Meter Balance (day-by-day, fixed on 1st recharge/month)</h2>
             <div className="overflow-x-auto">
                <svg viewBox={`0 0 ${chartW} ${chartH}`} className="w-full h-[240px] bg-base-200 rounded-box text-base-content" role="img" aria-label="Day-by-day meter balance chart">
                  {/* grid */}
@@ -196,18 +196,18 @@ function Home() {
         <div className="grid md:grid-cols-2 gap-6">
           <div className="card bg-base-100 shadow">
             <div className="card-body">
-              <h3 className="card-title">3a — When does balance run out?</h3>
-              <p className="text-sm opacity-70">At ৳{lastBal.toFixed(2)} today ({curCase.today}) with {curCase.usual_daily_units} u/day (slab-aware, no future recharges).</p>
-              {runout ? <div className="alert alert-warning mt-2"><span>⏰ Runs out on <b>{runout.date}</b> — {runout.daysLeft} days from today</span></div> : <div className="alert">No run-out in next year</div>}
-              <div className="text-xs opacity-60 mt-2">Cost per future day = slab rate for that month's cum × (1+VAT). Fixed charges not included unless you recharge.</div>
+              <h3 className="card-title text-2xl">3a — When does balance run out?</h3>
+              <p className="text-base opacity-80">At ৳{lastBal.toFixed(2)} today ({curCase.today}) with {curCase.usual_daily_units} u/day (slab-aware, no future recharges).</p>
+              {runout ? <div className="alert alert-warning mt-2 text-base"><span>⏰ Runs out on <b>{runout.date}</b> — {runout.daysLeft} days from today</span></div> : <div className="alert text-base">No run-out in next year</div>}
+              <div className="text-sm opacity-70 mt-2">Cost per future day = slab rate for that month's cum × (1+VAT). Fixed charges not included unless you recharge.</div>
             </div>
           </div>
           <div className="card bg-base-100 shadow">
             <div className="card-body">
-              <h3 className="card-title">3b — How much to last until?</h3>
+              <h3 className="card-title text-2xl">3b — How much to last until?</h3>
               <label className="form-control w-full">
-                <div className="label"><span className="label-text">Target date</span></div>
-                <input type="date" className="input input-bordered input-sm" value={targetDate} onChange={e => setTargetDate(e.target.value)} />
+                <div className="label"><span className="label-text text-base">Target date</span></div>
+                <input type="date" className="input input-bordered input-md text-base" value={targetDate} onChange={e => setTargetDate(e.target.value)} />
               </label>
               {required && required.breakdown ? (
                 <div className="space-y-2 mt-2">
@@ -236,9 +236,9 @@ function Home() {
         <div className="card bg-base-100 shadow">
           <div className="card-body">
             <h2 className="card-title">4 — Recharge habits (same consumption, same month slab counter)</h2>
-            <p className="text-sm opacity-70">Period: {curCase.comparison.months.join(', ')} • Opening ৳{curCase.comparison.opening_balance_bdt} •
-              <span className="badge badge-sm ml-1">Low-balance: recharge ৳{curCase.comparison.low_amount_bdt} when &lt; ৳{curCase.comparison.low_threshold_bdt}</span>
-              <span className="badge badge-sm ml-1">Monthly: ৳{curCase.comparison.monthly_amount_bdt} on 1st</span>
+            <p className="text-sm opacity-70">Period: {curCase.comparison.months.join(', ')} • Opening ৳{curCase.comparison.opening_balance_bdt} 
+              <span className="badge badge-sm ml-1"> • Low-balance: recharge ৳{curCase.comparison.low_amount_bdt} when &lt; ৳{curCase.comparison.low_threshold_bdt}</span>
+              <span className="badge badge-sm ml-1"> • Monthly: ৳{curCase.comparison.monthly_amount_bdt} on 1st</span>
             </p>
             <div className="grid md:grid-cols-2 gap-4 mt-2">
               {[
