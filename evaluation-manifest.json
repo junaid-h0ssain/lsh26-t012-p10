@@ -2,66 +2,70 @@
   "team_id": "LSH26-T012",
   "problem_id": "P10",
   "repository_name": "lsh26-t012-p10",
-  "live_url": "https://example.com",
+  "live_url": "https://recharge-advisor.vercel.app",
   "demo_video_url_optional": "",
   "event_start_code": "LSH26-8490-C900",
   "repository_created_before_release": false,
   "pre_event_materials": [],
   "sample_data": {
     "loads_published_fixture": true,
-    "method": "file upload",
-    "reset_instructions": "Explain how judges can restore the initial data."
+    "method": "repository fixture loaded by the application",
+    "reset_instructions": "Restore P10_prepaid_meter_public.json from the repository and reload the application."
   },
-  "problem_solving_method": "Briefly explain the approach and why the team chose it.",
+  "problem_solving_method": "A deterministic TypeScript calculation engine rebuilds the daily meter ledger, projects run-out and target-date recharge needs, and simulates both recharge habits. A React dashboard presents the supplied fixture, calculations, and evidence in one page.",
   "requirements": {
     "R1": {
       "status": "complete",
-      "evidence": "Page, route, feature or source-file path"
+      "evidence": "P10_prepaid_meter_public.json; src/lib/engine.ts:39-85; src/routes/index.tsx:96-131"
     },
     "R2": {
       "status": "complete",
-      "evidence": "Page, route, feature or source-file path"
+      "evidence": "src/lib/engine.ts:39-85; src/routes/index.tsx:133-156"
     },
     "R3": {
-      "status": "partial",
-      "evidence": "Explain what works and what remains"
+      "status": "complete",
+      "evidence": "src/lib/engine.ts:89-220; src/routes/index.tsx:158-195. Includes run-out date, target-date recharge, base energy, slab premium, fixed charges, and VAT."
     },
     "R4": {
-      "status": "not_attempted",
-      "evidence": "Not attempted"
+      "status": "complete",
+      "evidence": "src/lib/engine.ts:223-322; src/routes/index.tsx:198-234. Uses identical readings and monthly slab counters and separates consumed cost from deposited money."
     }
   },
   "team_members": [
     {
       "registered_name": "Junaid Hossain",
       "github_username": "junaid-h0ssain",
-      "major_contribution": "Brief description of personal contribution",
+      "major_contribution": "To be completed by the team.",
       "evidence_paths_or_commits": [
-        "src/example-file",
-        "<commit SHA if helpful>"
+        "README.md",
+        "src/lib/engine.ts"
       ]
     },
     {
       "registered_name": "Punam Chakraborty",
       "github_username": "punammomi",
-      "major_contribution": "Brief description of personal contribution",
+      "major_contribution": "To be completed by the team.",
       "evidence_paths_or_commits": [
-        "src/example-file",
-        "<commit SHA if helpful>"
+        "README.md",
+        "src/routes/index.tsx"
       ]
     }
   ],
   "major_design_decisions": [
-    "Decision and short reason"
+    "Use a deterministic engine with calendar-month slab counters so recharge timing cannot create an energy-rate saving.",
+    "Separate consumed cost from deposited recharge money to match the evaluation definition.",
+    "Keep the public JSON fixture as the reproducible source of truth for judges."
   ],
   "known_limitations": [
-    "Known limitation or unfinished behaviour"
+    "The app uses a static fixture and does not provide data entry or persistence.",
+    "Target-date estimates conservatively reserve fixed charges for future months.",
+    "bun run build succeeds; bun run check currently reports existing Biome diagnostics."
   ],
   "ai_tools_used": [
     {
       "tool": "Antigravity",
       "used_for": "Helped with implementing the prepaid meter recharge calculation,daily balance tracking, recharge logic and debugging",
-      "how_output_was_verified": "How the team checked the result"
+      "how_output_was_verified": "Reviewed the implementation against AGENTS.md, ran the calculation engine across all public cases, and verified bun run build succeeds."
     }
   ],
   "licenses_file": "LICENSES.md",

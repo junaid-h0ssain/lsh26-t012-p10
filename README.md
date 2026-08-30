@@ -1,208 +1,59 @@
-Welcome to your new TanStack Start app!
+# Prepaid Meter Recharge Advisor
 
-# Getting Started
+- Team ID: `T012`
+- Problem ID: `P10`
+- Live URL: https://recharge-advisor.vercel.app
 
-To run this application:
+## Setup
+
+Requirements: Bun or Node.js.
 
 ```bash
 bun install
-bun --bun run dev
+bun run dev
 ```
 
-# Building For Production
-
-To build this application for production:
+Open `http://localhost:3000`. For a production build:
 
 ```bash
-bun --bun run build
+bun run build
+bun run preview
 ```
 
-## Styling
+The public fixture is stored in `P10_prepaid_meter_public.json` and is loaded automatically. To restore the initial data, restore that file from the repository and reload the page.
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+## Requirements Proof
 
-### Removing Tailwind CSS
+1. **Household and readings:** The fixture contains 25 households with six or more months of consecutive daily readings and recharge history. The dashboard identifies a light month, a heavy summer month, and a month with a large recharge during its final seven days. See `P10_prepaid_meter_public.json` and `src/routes/index.tsx:96-131`.
+2. **Daily balance rebuild:** `src/lib/engine.ts:39-85` resets the monthly slab counter, prices daily units incrementally, applies the first-recharge demand charge and meter rent, adds VAT, and produces the daily ledger. The dashboard renders the balance line, recharge markers, and ledger at `src/routes/index.tsx:133-156`.
+3. **Family questions:** `src/lib/engine.ts:89-220` predicts the run-out date and calculates the selected target-date recharge, including base energy, higher-slab premium, fixed charges, and VAT. The controls and results are at `src/routes/index.tsx:158-195`.
+4. **Recharge habit comparison:** `src/lib/engine.ts:223-322` simulates low-balance and first-of-month recharging over the configured three months using identical readings and calendar-month slab counters. It reports consumed cost as energy, VAT, and fixed charges separately from deposited money. The result is shown at `src/routes/index.tsx:198-234`.
 
-If you prefer not to use Tailwind CSS:
+## Approach
 
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Remove `@tailwindcss/vite` and `tailwindcss` from `package.json`
+The application keeps tariff rules in a small reusable module and uses a deterministic calculation engine for the daily ledger, projections, and habit simulations. The React dashboard presents the fixture, calculations, explanations, and recharge events in one page. The comparison deliberately prices consumption independently of recharge timing so timing cannot create an artificial slab saving.
 
-## Linting & Formatting
+## Major Decisions
 
-This project uses [Biome](https://biomejs.dev/) for linting and formatting. The following scripts are available:
+- Use calendar-month incremental slabs and reset the slab counter on the first day of each month.
+- Apply demand charge and meter rent only on the first recharge in a month.
+- Treat cost as consumed money, separate from deposited recharge amounts.
+- Keep the supplied public JSON fixture as the source of truth so judges can reproduce results.
 
+## Known Limitations
 
-```bash
-bun --bun run lint
-bun --bun run format
-bun --bun run check
-```
+- The app uses the supplied static fixture; it does not provide household data entry or persistence.
+- Date calculations use JavaScript `Date` and assume the fixture's ISO dates are interpreted consistently in the browser timezone.
+- The target-date estimate reserves fixed charges for future months in the selected range, which is conservative when no recharge occurs in those months.
+- `bun run build` succeeds, but the repository currently has existing Biome formatting/lint diagnostics in `bun run check`.
 
+## Contributions
 
-## Deploy with Nitro
+- Junaid Hossain: **To be completed by the team.**
+- Punam Chakraborty: **To be completed by the team.**
 
-This project uses Nitro as a generic server adapter, so it can run on any Node-compatible host.
+## Safety and Data
 
-```bash
-npm run build
-node dist/server/index.mjs
-```
+The repository contains no passwords, API keys, access tokens, private keys, or personal user data. The names in `evaluation-manifest.json` are registered team-member identification required by the event template.
 
-The build output is a self-contained Node server. To deploy, push the `dist/` directory to your host (Render, Fly.io, your own VPS, etc.) and run the server command above.
-
-For host-specific presets (Vercel, Netlify, Cloudflare, AWS Lambda, etc.) and tuning, see https://v3.nitro.build/deploy.
-
-
-
-## Routing
-
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+See `EVENT.md`, `evaluation-manifest.json`, and `LICENSES.md` for the event declaration, evaluation details, and dependency/license inventory.
