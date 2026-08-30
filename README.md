@@ -1,8 +1,16 @@
 # Prepaid Meter Recharge Advisor
 
-- Team ID: `T012`
-- Problem ID: `P10`
-- Live URL: https://recharge-advisor.vercel.app
+Solution for **LofiStack Hackathon 2026 — P10**
+
+- **Team:** LSH26
+- **Team ID:** `LSH26-T012`
+- **Problem:** `P10 — Prepaid Meter Recharge Advisor`
+- **Live application:** <https://recharge-advisor.vercel.app>
+- **Demo video:** None
+
+## Solution Summary
+
+This dashboard helps a household understand prepaid electricity usage, balance depletion, and recharge planning. It rebuilds the meter balance day by day, answers future-recharge questions, and compares two recharge habits without inventing slab savings from recharge timing.
 
 ## Setup
 
@@ -29,9 +37,28 @@ The public fixture is stored in `P10_prepaid_meter_public.json` and is loaded au
 3. **Family questions:** `src/lib/engine.ts:89-220` predicts the run-out date and calculates the selected target-date recharge, including base energy, higher-slab premium, fixed charges, and VAT. The controls and results are at `src/routes/index.tsx:158-195`.
 4. **Recharge habit comparison:** `src/lib/engine.ts:223-322` simulates low-balance and first-of-month recharging over the configured three months using identical readings and calendar-month slab counters. It reports consumed cost as energy, VAT, and fixed charges separately from deposited money. The result is shown at `src/routes/index.tsx:198-234`.
 
+## How to Test
+
+1. Open the application and choose a household from the case selector.
+2. Review the daily readings, balance chart, and recharge markers.
+3. Select a target date in section 3b.
+4. Confirm the run-out date, required recharge breakdown, and three-month habit comparison.
+
+### Test Data
+
+The published fixture is loaded automatically from `P10_prepaid_meter_public.json`. Restore that file from the repository and reload the page to reset the sample data.
+
 ## Approach
 
 The application keeps tariff rules in a small reusable module and uses a deterministic calculation engine for the daily ledger, projections, and habit simulations. The React dashboard presents the fixture, calculations, explanations, and recharge events in one page. The comparison deliberately prices consumption independently of recharge timing so timing cannot create an artificial slab saving.
+
+## Technology Used
+
+- **Frontend:** React, TanStack Start, Tailwind CSS, DaisyUI
+- **Backend:** Nitro SSR adapter
+- **Database:** None
+- **Deployment:** Vercel
+- **Other material tools:** TypeScript, Vite, Bun
 
 ## Major Decisions
 
@@ -51,6 +78,12 @@ The application keeps tariff rules in a small reusable module and uses a determi
 
 - Junaid Hossain: **To be completed by the team.**
 - Punam Chakraborty: **To be completed by the team.**
+
+See `evaluation-manifest.json` for registered usernames and evidence paths.
+
+## AI Usage
+
+AI usage and verification details are recorded in `evaluation-manifest.json`.
 
 ## Safety and Data
 
