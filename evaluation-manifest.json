@@ -59,7 +59,7 @@
   ],
   "ai_tools_used": [
     {
-      "tool": "<TOOL NAME>",
+      "tool": "Antigravity",
       "used_for": "What the tool helped with",
       "how_output_was_verified": "How the team checked the result"
     }
